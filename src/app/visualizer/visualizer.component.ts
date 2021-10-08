@@ -14,9 +14,11 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   @ViewChild('visualizercanvas') 
   private visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
   private audioService: AudioService;
+  public fft: number;  
 
   constructor(audioService: AudioService) {
     this.audioService = audioService;
+    this.fft = 2048;
   }
   
   ngOnInit(): void { }
@@ -89,6 +91,12 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
       canvasCtx.lineTo(WIDTH, HEIGHT / 2);
       canvasCtx.stroke();
     }
+  }
+
+  sliderChanged = (value: number) => {
+    let newFFT = Math.pow(2, value) * 1024;
+    this.fft = newFFT
+    this.audioService.setFFT(this.fft);
   }
 
 }

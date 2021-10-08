@@ -5,14 +5,16 @@ import { Injectable } from '@angular/core';
 })
 export class AudioService {
 
-  private audioContext: AudioContext;
-  private analyser: AnalyserNode;
+  private _fftSize: number;
+  private _audioContext: AudioContext;
+  private _analyser: AnalyserNode;
 
   constructor() {
     // This should be the only instance of AudioContext
-    this.audioContext = new window.AudioContext();
-    this.analyser = new AnalyserNode(this.audioContext);
-    this.analyser.fftSize = 2048;
+    this._fftSize = 2048;
+    this._audioContext = new window.AudioContext();
+    this._analyser = new AnalyserNode(this._audioContext);
+    this._analyser.fftSize = this._fftSize;
   }
 
   public async init() {
@@ -21,18 +23,24 @@ export class AudioService {
       audio: true
     });
 
-    let streamSource = this.audioContext.createMediaStreamSource(stream);
+    let streamSource = this._audioContext.createMediaStreamSource(stream);
 
-    // streamSource.connect(this.audioContext.destination);
-    streamSource.connect(this.analyser);
+    // streamSource.connect(this._audioContext.destination);
+    streamSource.connect(this._analyser);
   }
 
-  async getStreamData(): Promise<Uint8Array> {
-    const bufferLength = this.analyser.frequencyBinCount;
+  public async getStreamData(): Promise<Uint8Array> {
+    const bufferLength = this._analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
-    this.analyser.getByteTimeDomainData(dataArray);
+    this._analyser.getByteTimeDomainData(dataArray);
 
     return dataArray;
   }
+
+  public setFFT(value: number) {
+    this._fftSize = value;
+    this._analyser.fftSize = this._fftSize;
+  }
+  
 }
