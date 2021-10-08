@@ -10,7 +10,7 @@ export class AudioService {
 
   constructor() {
     // This should be the only instance of AudioContext
-    this.audioContext = new AudioContext();
+    this.audioContext = new window.AudioContext();
     this.analyser = new AnalyserNode(this.audioContext);
     this.analyser.fftSize = 2048;
   }
