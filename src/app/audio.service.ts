@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AudioService {
 
-  private _fftSize: number;
+  public _fftSize: number;
   private _audioContext: AudioContext;
   private _analyser: AnalyserNode;
 
@@ -37,6 +37,10 @@ export class AudioService {
     this._analyser.getByteFrequencyData(dataArray);
 
     return dataArray;
+  }
+
+  public getFFT(): number {
+    return this._fftSize;
   }
 
   public setFFT(value: number) {

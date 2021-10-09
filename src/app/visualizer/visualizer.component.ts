@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { VisualizerService } from '../visualizer.service';
 import { AudioService } from '../audio.service';
 import { Strategy, VisualContext } from '../visuals/VisualContext';
 
@@ -13,23 +14,23 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   public height: number = window.innerHeight;
 
   @ViewChild('visualizercanvas') 
-  private visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
-  private audioService: AudioService;
-  public fft: number;  
+  private _visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
+  private _visualizerService: VisualizerService;
+  private _audioService: AudioService;
 
-  constructor(audioService: AudioService) {
-    this.audioService = audioService;
-    this.fft = 2048;
+  constructor(visualizerService: VisualizerService, audioService: AudioService) {
+    this._visualizerService = visualizerService;
+    this._audioService = audioService;
   }
   
   ngOnInit(): void { }
 
   async ngAfterViewInit(): Promise<void> {
-    let canvas = this.visualizerCanvas?.nativeElement;
+    let canvas = this._visualizerCanvas?.nativeElement;
 
     try {
       if (canvas) {
-        this.audioService.init();
+        this._visualizerService.init();
 
         this.drawCanvas(
           canvas
@@ -50,7 +51,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   async drawCanvas(canvas: HTMLCanvasElement) {
     let drawVisual = requestAnimationFrame(() => this.drawCanvas(canvas));
 
-    let data = await this.audioService.getStreamData();
+    let data = await this._visualizerService.getData();
     
     let visualContext = new VisualContext(Strategy.BARSFREQ);
 
@@ -59,8 +60,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
 
   sliderChanged = (value: number) => {
     let newFFT = Math.pow(2, value) * 1024;
-    this.fft = newFFT
-    this.audioService.setFFT(this.fft);
+    this._audioService.setFFT(newFFT);
   }
 
 }

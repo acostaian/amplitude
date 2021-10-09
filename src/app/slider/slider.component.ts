@@ -1,4 +1,5 @@
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { AudioService } from '../audio.service';
 
 @Component({
   selector: 'app-slider',
@@ -8,14 +9,23 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 export class SliderComponent implements OnInit {
 
   public value: number = 1;
+  public displayedValue: number;
   @Input() 
-  public displayedValue: number = 0;
-  @Input() 
-  public onValueChanged = (value: number) => {};
+  public updateFFT = (value: number) => {};
 
-  constructor() { }
+  private _audioService: AudioService;
+
+  constructor(audioService: AudioService) {
+    this._audioService = audioService;
+    this.displayedValue = this._audioService.getFFT();
+  }
 
   ngOnInit(): void {
+  }
+
+  onValueChanged(value: number) {
+    this.updateFFT(value);
+    this.displayedValue = this._audioService.getFFT();
   }
 
 }
