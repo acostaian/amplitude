@@ -1,7 +1,6 @@
 import { VisualStrategy } from './VisualStrategy';
 
-export class Bar implements VisualStrategy {
-
+export class BarFreq implements VisualStrategy {
     display(data: Uint8Array, canvas: HTMLCanvasElement) {
         let canvasCtx = canvas?.getContext('2d');
 
@@ -16,7 +15,7 @@ export class Bar implements VisualStrategy {
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
             // Bar
-            let barWidth = (WIDTH / data.length); // Multiply by 2.5 to remove low frequency bars 
+            let barWidth = (WIDTH / data.length);
             let barHeight;
             let x = 0;
 
@@ -26,11 +25,10 @@ export class Bar implements VisualStrategy {
 
                 let color = barHeight + 100;
                 canvasCtx.fillStyle = 'rgb(255, 255, 255)';
-                canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
+                canvasCtx.fillRect(x, HEIGHT, barWidth, -barHeight);
 
                 x += barWidth + 0.1;
             }
         }
     }
-
 }

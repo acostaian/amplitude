@@ -1,6 +1,7 @@
 enum Strategy {
     WAVEFORM,
-    BARS
+    BARS,
+    BARSFREQ
 };
 
 export default Strategy;

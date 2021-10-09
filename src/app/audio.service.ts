@@ -33,7 +33,8 @@ export class AudioService {
     const bufferLength = this._analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
-    this._analyser.getByteTimeDomainData(dataArray);
+    // this._analyser.getByteTimeDomainData(dataArray);
+    this._analyser.getByteFrequencyData(dataArray);
 
     return dataArray;
   }

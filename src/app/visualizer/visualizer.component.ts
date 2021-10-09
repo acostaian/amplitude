@@ -54,7 +54,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
 
     let data = await this.audioService.getStreamData();
     
-    let visualContext = new VisualContext(Strategy.BARS);
+    let visualContext = new VisualContext(Strategy.BARSFREQ);
 
     visualContext.displayData(data, canvas);
   }
