@@ -1,6 +1,5 @@
 import { VisualStrategy } from './VisualStrategy';
-import { Waveform } from './Waveform';
-import Strategy from './Strategy';
+import { Strategy, Waveform } from './Visualizers';
 import visuals from './visuals';
 
 class VisualContext {

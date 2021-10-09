@@ -1,8 +1,5 @@
 import { Visual } from './Visual';
-import { Waveform } from './Waveform';
-import { Bar } from './Bar';
-import { BarFreq } from './BarFreq';
-import Strategy from './Strategy';
+import { Strategy, Bar, BarFreq, Waveform } from './Visualizers';
 
 const visuals = new Map<Strategy, Visual>();
 

@@ -1,8 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { AudioService } from '../audio.service';
-import { VisualContext } from '../visuals/VisualContext';
-import Strategy from '../visuals/Strategy';
-
+import { Strategy, VisualContext } from '../visuals/VisualContext';
 
 @Component({
   selector: 'app-visualizer',
