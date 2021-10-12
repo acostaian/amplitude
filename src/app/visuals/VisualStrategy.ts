@@ -1,3 +1,3 @@
 export interface VisualStrategy {
-    display(data: Uint8Array, canvas: HTMLCanvasElement): void;
+    display(data: { timeDomain: Uint8Array, frequency: Uint8Array }, canvas: HTMLCanvasElement): void;
 }

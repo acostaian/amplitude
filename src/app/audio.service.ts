@@ -34,13 +34,25 @@ export class AudioService {
     this._contextInitialized = true;
   }
 
-  public async getStreamData(): Promise<Uint8Array> {
+  public async getFrequencyData(): Promise<Uint8Array> {
     if (this._audioContext && this._audioContext.state === 'running') {
       const bufferLength = this._analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
   
-      // this._analyser.getByteTimeDomainData(dataArray);
       this._analyser.getByteFrequencyData(dataArray);
+  
+      return dataArray;
+    } else {
+      return new Uint8Array();
+    }
+  }
+
+  public async getTimeDomainData(): Promise<Uint8Array> {
+    if (this._audioContext && this._audioContext.state === 'running') {
+      const bufferLength = this._analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+  
+      this._analyser.getByteTimeDomainData(dataArray);
   
       return dataArray;
     } else {

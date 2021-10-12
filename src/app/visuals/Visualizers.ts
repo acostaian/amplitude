@@ -2,7 +2,12 @@ import { VisualStrategy } from './VisualStrategy';
 
 class Bar implements VisualStrategy {
 
-    display(data: Uint8Array, canvas: HTMLCanvasElement) {
+    display(
+        data: { timeDomain: Uint8Array, frequency: Uint8Array }, 
+        canvas: HTMLCanvasElement
+    ) {
+        let { timeDomain } = data;
+
         let canvasCtx = canvas?.getContext('2d');
 
         if (canvasCtx) {
@@ -16,13 +21,13 @@ class Bar implements VisualStrategy {
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
             // Bar
-            let barWidth = (WIDTH / data.length); // Multiply by 2.5 to remove low frequency bars 
+            let barWidth = (WIDTH / timeDomain.length); // Multiply by 2.5 to remove low frequency bars 
             let barHeight;
             let x = 0;
 
             // Draw each bar
-            for (let i = 0; i < data.length; i++) {
-                barHeight = data[i] * 3;
+            for (let i = 0; i < timeDomain.length; i++) {
+                barHeight = timeDomain[i] * 3;
 
                 let color = barHeight + 100;
                 canvasCtx.fillStyle = 'rgb(255, 255, 255)';
@@ -36,7 +41,12 @@ class Bar implements VisualStrategy {
 }
 
 class BarFreq implements VisualStrategy {
-    display(data: Uint8Array, canvas: HTMLCanvasElement) {
+    display(
+        data: { timeDomain: Uint8Array, frequency: Uint8Array }, 
+        canvas: HTMLCanvasElement
+    ) {
+        let { frequency } = data;
+
         let canvasCtx = canvas?.getContext('2d');
 
         if (canvasCtx) {
@@ -50,13 +60,13 @@ class BarFreq implements VisualStrategy {
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
             // Bar
-            let barWidth = (WIDTH / data.length);
+            let barWidth = (WIDTH / frequency.length);
             let barHeight;
             let x = 0;
 
             // Draw each bar
-            for (let i = 0; i < data.length; i++) {
-                barHeight = data[i] * 3;
+            for (let i = 0; i < frequency.length; i++) {
+                barHeight = frequency[i] * 3;
 
                 let color = barHeight + 100;
                 canvasCtx.fillStyle = 'rgb(255, 255, 255)';
@@ -70,7 +80,12 @@ class BarFreq implements VisualStrategy {
 
 class Waveform implements VisualStrategy {
 
-    display(data: Uint8Array, canvas: HTMLCanvasElement) {
+    display(
+        data: { timeDomain: Uint8Array, frequency: Uint8Array }, 
+        canvas: HTMLCanvasElement
+    ) {
+        let { timeDomain } = data;
+
         let canvasCtx = canvas?.getContext('2d');
 
         if (canvasCtx) {
@@ -88,12 +103,12 @@ class Waveform implements VisualStrategy {
             canvasCtx.strokeStyle = 'rgb(255, 255, 255)';
             canvasCtx.beginPath();
         
-            const sliceWidth = WIDTH * 1.0 / data.length; // data.length * 2?
+            const sliceWidth = WIDTH * 1.0 / timeDomain.length; // timeDomain.length * 2?
             let x = 0;
         
-            for(var i = 0; i < data.length; i++) {
+            for(var i = 0; i < timeDomain.length; i++) {
         
-                const v = data[i] / 128.0;
+                const v = timeDomain[i] / 128.0;
                 const y = v * HEIGHT / 2;
         
                 if(i === 0) {

@@ -14,7 +14,7 @@ class VisualContext {
         this._selectedVisualStrategy = visuals.get(strategy)?.visualStrategy ?? new Waveform();
     }
 
-    public displayData(data: Uint8Array, canvas: HTMLCanvasElement) {
+    public displayData(data: { timeDomain: Uint8Array, frequency: Uint8Array }, canvas: HTMLCanvasElement) {
         this._selectedVisualStrategy.display(data, canvas);
     }
 
