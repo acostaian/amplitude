@@ -1,2 +1,4 @@
-<app-slider [updateFFT]="sliderChanged"></app-slider>
-<canvas id="visualizer-canvas" #visualizercanvas [attr.width]="width" [attr.height]="height"></canvas>
+<div class="visualizer">
+    <app-visualizer-tools></app-visualizer-tools>
+    <canvas id="visualizer-canvas" class="visualizer-canvas" #visualizercanvas [attr.width]="width" [attr.height]="height"></canvas>
+</div>

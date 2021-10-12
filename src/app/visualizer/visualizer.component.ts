@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { VisualizerService } from '../visualizer.service';
 import { AudioService } from '../audio.service';
 import { Strategy, VisualContext } from '../visuals/VisualContext';
 
@@ -15,11 +14,9 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
 
   @ViewChild('visualizercanvas') 
   private _visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
-  private _visualizerService: VisualizerService;
   private _audioService: AudioService;
 
-  constructor(visualizerService: VisualizerService, audioService: AudioService) {
-    this._visualizerService = visualizerService;
+  constructor(audioService: AudioService) {
     this._audioService = audioService;
   }
   
@@ -30,8 +27,6 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
 
     try {
       if (canvas) {
-        this._visualizerService.init();
-
         this.drawCanvas(
           canvas
         );
@@ -51,16 +46,14 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   async drawCanvas(canvas: HTMLCanvasElement) {
     let drawVisual = requestAnimationFrame(() => this.drawCanvas(canvas));
 
-    let data = await this._visualizerService.getData();
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
+    let data = await this._audioService.getStreamData();
     
     let visualContext = new VisualContext(Strategy.BARSFREQ);
 
     visualContext.displayData(data, canvas);
   }
-
-  sliderChanged = (value: number) => {
-    let newFFT = Math.pow(2, value) * 1024;
-    this._audioService.setFFT(newFFT);
-  }
-
+  
 }
