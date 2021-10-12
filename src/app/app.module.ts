@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { VisualizerToolsComponent } from './visualizer-tools/visualizer-tools.component';
 import { MuteButtonComponent } from './mute-button/mute-button.component';
+import { VisualsSelectorComponent } from './visuals-selector/visuals-selector.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { MuteButtonComponent } from './mute-button/mute-button.component';
     VisualizerComponent,
     SliderComponent,
     VisualizerToolsComponent,
-    MuteButtonComponent
+    MuteButtonComponent,
+    VisualsSelectorComponent
   ],
   imports: [
     BrowserModule,

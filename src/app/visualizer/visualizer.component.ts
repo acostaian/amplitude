@@ -15,6 +15,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   @ViewChild('visualizercanvas') 
   private _visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
   private _audioService: AudioService;
+  private _selectedVisual: Strategy = Strategy.BARSFREQ;
 
   constructor(audioService: AudioService) {
     this._audioService = audioService;
@@ -50,7 +51,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
     this.height = window.innerHeight;
 
     
-    let visualContext = new VisualContext(Strategy.WAVEFORM);
+    let visualContext = new VisualContext(this._selectedVisual);
     
     let data = {
       timeDomain: await this._audioService.getTimeDomainData(),
@@ -58,6 +59,10 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
     };
 
     visualContext.displayData(data, canvas);
+  }
+
+  visualChanged = (newVisual: Strategy) => {
+    this._selectedVisual = newVisual;
   }
   
 }

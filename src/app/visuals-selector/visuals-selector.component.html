@@ -1,0 +1,5 @@
+<div class="visuals-selector">
+    <ul *ngFor="let visual of visuals; index as i">
+        <li (click)="selectVisual(i)">{{ visual[1].name }}</li>
+    </ul>
+</div>
