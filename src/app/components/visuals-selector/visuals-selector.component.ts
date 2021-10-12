@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Strategy } from '../visuals/Visualizers';
-import visuals from '../visuals/visuals';
+import { VisualizerService } from 'src/app/services/visualizer-service/visualizer.service';
+import { Strategy } from '../../visuals/Visualizers';
+import visuals from '../../visuals/visuals';
 
 @Component({
   selector: 'app-visuals-selector',
@@ -10,18 +11,21 @@ import visuals from '../visuals/visuals';
 export class VisualsSelectorComponent implements OnInit {
 
   public visuals = Array.from(visuals);
-  @Input()
-  public selectedVisual!: Strategy;
-  @Input()
-  public onVisualChanged: (newVisual: Strategy) => void = () => {};
+  public selectedVisual: Strategy;
+  
+  private _visualizerService: VisualizerService;
 
-  constructor() { }
+  constructor(visualizerService: VisualizerService) {
+    this._visualizerService = visualizerService;
+    this.selectedVisual = this._visualizerService.selectedVisual;
+  }
 
   ngOnInit(): void {
   }
 
-  selectVisual(i: number) {
-    this.onVisualChanged(this.visuals[i][0]);
+  selectVisual(strategy: number) {
+    this.selectedVisual = <Strategy>strategy;
+    this._visualizerService.selectedVisual = <Strategy>strategy;
   }
 
 }
