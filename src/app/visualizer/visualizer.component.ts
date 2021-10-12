@@ -11,11 +11,11 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
 
   public width: number = window.innerWidth;
   public height: number = window.innerHeight;
+  public selectedVisual: Strategy = Strategy.BARSFREQ;
 
   @ViewChild('visualizercanvas') 
   private _visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
   private _audioService: AudioService;
-  private _selectedVisual: Strategy = Strategy.BARSFREQ;
   private _canvas!: HTMLCanvasElement;
 
   @HostListener('window:resize')
@@ -52,7 +52,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
       this.width = window.innerWidth;
       this.height = window.innerHeight;
       
-      let visualContext = new VisualContext(this._selectedVisual);
+      let visualContext = new VisualContext(this.selectedVisual);
       
       let data = {
         timeDomain: await this._audioService.getTimeDomainData(),
@@ -74,7 +74,7 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   }
 
   visualChanged = (newVisual: Strategy) => {
-    this._selectedVisual = newVisual;
+    this.selectedVisual = newVisual;
   }
   
 }

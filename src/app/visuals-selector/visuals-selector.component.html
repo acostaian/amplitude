@@ -1,5 +1,10 @@
 <div class="visuals-selector">
-    <ul *ngFor="let visual of visuals; index as i">
-        <li (click)="selectVisual(i)">{{ visual[1].name }}</li>
+    <ul class="visuals-selector-list" *ngFor="let visual of visuals; index as i">
+        <div *ngIf="selectedVisual === visual[0]; else notSelected">
+            <li class="visual-element visual-element-selected" (click)="selectVisual(i)">{{ visual[1].name }}</li>
+        </div>
+        <ng-template #notSelected>
+            <li class="visual-element" (click)="selectVisual(i)">{{ visual[1].name }}</li>
+        </ng-template>
     </ul>
 </div>

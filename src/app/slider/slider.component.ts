@@ -8,10 +8,8 @@ import { AudioService } from '../audio.service';
 })
 export class SliderComponent implements OnInit {
 
-  public value: number = 1;
+  public value: number = 3;
   public displayedValue: number;
-  @Input() 
-  public updateFFT = (value: number) => {};
 
   private _audioService: AudioService;
 
@@ -23,10 +21,10 @@ export class SliderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onValueChanged = (value: number) => {
-    let newFFT = Math.pow(2, value) * 1024;
+  onValueChanged = () => {
+    let newFFT = Math.pow(2, this.value) * 256;
+    this.displayedValue = newFFT;
     this._audioService.setFFT(newFFT);
-    this.displayedValue = this._audioService.getFFT();
   }
 
 }

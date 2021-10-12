@@ -6,7 +6,7 @@ const visuals = new Map<Strategy, Visual>();
 visuals.set(
     Strategy.WAVEFORM,
     new Visual(
-        'Waveform',
+        'Sine Wave',
         new Waveform()
     )
 );
@@ -14,7 +14,7 @@ visuals.set(
 visuals.set(
     Strategy.BARS,
     new Visual(
-        'Bars Domain',
+        'Time Domain',
         new Bar()
     )
 );
@@ -22,7 +22,7 @@ visuals.set(
 visuals.set(
     Strategy.BARSFREQ,
     new Visual(
-        'Frequency Bar',
+        'Frequency Domain',
         new BarFreq()
     )
 );

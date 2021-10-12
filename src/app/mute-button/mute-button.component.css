@@ -1,4 +1,5 @@
 .white-icon {
     color: var(--main-color);
     cursor: pointer;
+    vertical-align: middle;
 }

@@ -1,6 +1,4 @@
 .visualizer-slider {
-    padding: 1rem;
-
     color: white;
     font-weight: bold;
     
@@ -9,11 +7,9 @@
 
 .visualizer-slider-input {
     -webkit-appearance: none;
-    margin: 0 0.5rem;
+    margin-right: 0.5rem;
     padding: 0 0.2rem;
     border-radius: 1rem;
-
-    vertical-align: middle;
     width: 10rem;
 }
 

@@ -11,6 +11,8 @@ export class VisualsSelectorComponent implements OnInit {
 
   public visuals = Array.from(visuals);
   @Input()
+  public selectedVisual!: Strategy;
+  @Input()
   public onVisualChanged: (newVisual: Strategy) => void = () => {};
 
   constructor() { }

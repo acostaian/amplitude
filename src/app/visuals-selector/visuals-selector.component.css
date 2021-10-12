@@ -1,6 +1,20 @@
 .visuals-selector {
-    position: absolute;
     color: white;
+    text-align: center;
 
-    top:100px;
+    height: 100%;
+}
+
+.visuals-selector-list {
+    list-style: none;
+}
+
+.visual-element:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.visual-element-selected {
+    font-weight: bold;
 }
