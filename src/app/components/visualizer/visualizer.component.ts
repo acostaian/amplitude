@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
-import { AudioService } from '../audio.service';
+import { AudioService } from '../../services/audio-service/audio.service';
 import { Strategy, VisualContext } from '../visuals/VisualContext';
 
 @Component({
