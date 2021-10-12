@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AudioService } from '../audio.service';
 
 @Component({
   selector: 'app-visualizer-tools',
@@ -8,18 +7,9 @@ import { AudioService } from '../audio.service';
 })
 export class VisualizerToolsComponent implements OnInit {
 
-  private _audioService: AudioService;
-
-  constructor(audioService: AudioService) {
-    this._audioService = audioService;
-  }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  sliderChanged = (value: number) => {
-    let newFFT = Math.pow(2, value) * 1024;
-    this._audioService.setFFT(newFFT);
   }
 
 }

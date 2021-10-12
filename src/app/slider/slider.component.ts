@@ -23,8 +23,9 @@ export class SliderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onValueChanged(value: number) {
-    this.updateFFT(value);
+  onValueChanged = (value: number) => {
+    let newFFT = Math.pow(2, value) * 1024;
+    this._audioService.setFFT(newFFT);
     this.displayedValue = this._audioService.getFFT();
   }
 
