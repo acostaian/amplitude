@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { AudioService } from '../audio.service';
 import { Strategy, VisualContext } from '../visuals/VisualContext';
 
@@ -16,6 +16,14 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   private _visualizerCanvas: ElementRef<HTMLCanvasElement> | undefined;
   private _audioService: AudioService;
   private _selectedVisual: Strategy = Strategy.BARSFREQ;
+  private _canvas!: HTMLCanvasElement;
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    if (this._canvas) {
+      this.refreshData();
+    }
+  }
 
   constructor(audioService: AudioService) {
     this._audioService = audioService;
@@ -26,12 +34,33 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
   async ngAfterViewInit(): Promise<void> {
     let canvas = this._visualizerCanvas?.nativeElement;
 
+    if (canvas) {
+      this._canvas = canvas;
+      this.drawCanvas();
+    }
+  }
+
+  async drawCanvas() {
+    let drawVisual = requestAnimationFrame(() => this.drawCanvas());
+
+    await this.refreshData();
+  }
+
+  async refreshData() {
     try {
-      if (canvas) {
-        this.drawCanvas(
-          canvas
-        );
-      }
+
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+      
+      let visualContext = new VisualContext(this._selectedVisual);
+      
+      let data = {
+        timeDomain: await this._audioService.getTimeDomainData(),
+        frequency: await this._audioService.getFrequencyData()
+      };
+  
+      visualContext.displayData(data, this._canvas);
+
     } catch (error) {
       if (error instanceof DOMException) {
         // If the user denies access or the device is unavailable
@@ -42,23 +71,6 @@ export class VisualizerComponent implements OnInit, AfterViewInit {
         console.error('Unknown error.');
       }
     }
-  }
-
-  async drawCanvas(canvas: HTMLCanvasElement) {
-    let drawVisual = requestAnimationFrame(() => this.drawCanvas(canvas));
-
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-
-    
-    let visualContext = new VisualContext(this._selectedVisual);
-    
-    let data = {
-      timeDomain: await this._audioService.getTimeDomainData(),
-      frequency: await this._audioService.getFrequencyData()
-    };
-
-    visualContext.displayData(data, canvas);
   }
 
   visualChanged = (newVisual: Strategy) => {
