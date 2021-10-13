@@ -1,4 +1,16 @@
-<div class="visualizer-tools">
-    <app-slider></app-slider>
-    <app-mute-button></app-mute-button>
-</div>
+<nav id="visualizer-nav" [attr.class]="toolsNavClass">
+    <div id="visualizer-nav-structure" class="visualizer-nav-structure">
+        <div id="visualizer-tools-button" class="visualizer-tools-button">
+            <div id="visualizer-tools-inner-square" class="visualizer-tools-inner-square">
+                <div id="visualizer-tools-arrow" [attr.class]="toolsArrowClass" (click)="showTools()"></div>
+            </div>
+        </div>
+        <div id="visualizer-tools" class="visualizer-tools">
+            <div id="visualizer-tools-controls" class="visualizer-tools-controls">
+                <app-mute-button></app-mute-button>
+            </div>
+            <app-visuals-selector></app-visuals-selector>
+            <app-slider></app-slider>
+        </div>
+    </div>
+</nav>
