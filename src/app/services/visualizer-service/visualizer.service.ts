@@ -18,12 +18,9 @@ export class VisualizerService {
     let visualContext = new VisualContext(this.selectedVisual);
 
     try {
-      let data = {
-        timeDomain: await this._audioService.getTimeDomainData(),
-        frequency: await this._audioService.getFrequencyData()
-      };
+      const audioData = await this._audioService.getAudioData()
   
-      visualContext.displayData(data, canvas);
+      visualContext.displayData(audioData, canvas);
     } catch (error) {
       if (error instanceof DOMException) {
         // If the user denies access or the device is unavailable

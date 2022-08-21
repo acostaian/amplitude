@@ -1,6 +1,7 @@
 import { VisualStrategy } from './VisualStrategy';
 import { Strategy, Waveform } from './Visualizers';
 import visuals from './visuals';
+import AudioData from '../models/AudioData';
 
 class VisualContext {
 
@@ -14,8 +15,8 @@ class VisualContext {
         this._selectedVisualStrategy = visuals.get(strategy)?.visualStrategy ?? new Waveform();
     }
 
-    public displayData(data: { timeDomain: Uint8Array, frequency: Uint8Array }, canvas: HTMLCanvasElement) {
-        this._selectedVisualStrategy.display(data, canvas);
+    public displayData(audioData: AudioData, canvas: HTMLCanvasElement) {
+        this._selectedVisualStrategy.display(audioData, canvas);
     }
 
 }

@@ -1,12 +1,14 @@
+import AudioData from '../models/AudioData';
 import { VisualStrategy } from './VisualStrategy';
 
 class Bar implements VisualStrategy {
 
     display(
-        data: { timeDomain: Uint8Array, frequency: Uint8Array }, 
+        audioData: AudioData,
         canvas: HTMLCanvasElement
     ) {
-        let { timeDomain } = data;
+        const mainTimeDomain = audioData.mainTimeDomainData;
+        const secondaryTimeDomain = audioData.secondaryTimeDomainData;
 
         let canvasCtx = canvas?.getContext('2d');
 
@@ -21,17 +23,29 @@ class Bar implements VisualStrategy {
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
             // Bar
-            let barWidth = (WIDTH / timeDomain.length); // Multiply by 2.5 to remove low frequency bars 
+            let barWidth = (WIDTH / mainTimeDomain.length);
             let barHeight;
             let x = 0;
 
-            // Draw each bar
-            for (let i = 0; i < timeDomain.length; i++) {
-                barHeight = timeDomain[i] * 3;
+            // Draw each left bar
+            for (let i = 0; i < mainTimeDomain.length; i++) {
+                barHeight = mainTimeDomain[i] * 3;
 
-                let color = barHeight + 100;
-                canvasCtx.fillStyle = 'rgb(255, 255, 255)';
+                canvasCtx.fillStyle = 'rgbA(255, 255, 255, 0.8)';
                 canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
+
+                x += barWidth + 0.1;
+            }
+
+            barWidth = (WIDTH / mainTimeDomain.length);
+            x = 0;
+
+            // Draw each rigth bar
+            for (let i = 0; i < secondaryTimeDomain.length; i++) {
+                barHeight = secondaryTimeDomain[i] * 3;
+
+                canvasCtx.fillStyle = 'rgbA(255, 255, 255, 0.8)';
+                canvasCtx.fillRect(x, 0, barWidth, barHeight / 2);
 
                 x += barWidth + 0.1;
             }
@@ -42,10 +56,11 @@ class Bar implements VisualStrategy {
 
 class BarFreq implements VisualStrategy {
     display(
-        data: { timeDomain: Uint8Array, frequency: Uint8Array }, 
+        audioData: AudioData,
         canvas: HTMLCanvasElement
     ) {
-        let { frequency } = data;
+        const mainFrequency = audioData.mainFrequencyData;
+        const secondaryFrequency = audioData.secondaryFrequencyData;
 
         let canvasCtx = canvas?.getContext('2d');
 
@@ -60,19 +75,30 @@ class BarFreq implements VisualStrategy {
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
             // Bar
-            let barWidth = (WIDTH / frequency.length);
+            let barWidth = (WIDTH / mainFrequency.length);
             let barHeight;
             let x = 0;
 
-            // Draw each bar
-            for (let i = 0; i < frequency.length; i++) {
-                barHeight = frequency[i] * 3;
+            // Draw each left bar
+            for (let i = 0; i < mainFrequency.length; i++) {
+                barHeight = mainFrequency[i] * 3;
 
-                let color = barHeight + 100;
-                canvasCtx.fillStyle = 'rgb(255, 255, 255)';
+                canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                 canvasCtx.fillRect(x, HEIGHT, barWidth, -barHeight);
 
                 x += barWidth + 0.1;
+            }
+
+            x = WIDTH;
+
+            // Draw each rigth bar
+            for (let i = 0; i < secondaryFrequency.length; i++) {
+                barHeight = secondaryFrequency[i] * 3;
+
+                canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                canvasCtx.fillRect(x, HEIGHT, barWidth, -barHeight);
+
+                x -= barWidth + 0.1;
             }
         }
     }
@@ -81,10 +107,11 @@ class BarFreq implements VisualStrategy {
 class Waveform implements VisualStrategy {
 
     display(
-        data: { timeDomain: Uint8Array, frequency: Uint8Array }, 
+        audioData: AudioData,
         canvas: HTMLCanvasElement
     ) {
-        let { timeDomain } = data;
+        const mainTimeDomain = audioData.mainTimeDomainData;
+        const secondaryTimeDomain = audioData.secondaryTimeDomainData;
 
         let canvasCtx = canvas?.getContext('2d');
 
@@ -98,30 +125,40 @@ class Waveform implements VisualStrategy {
             canvasCtx.fillStyle = 'rgb(0, 0, 0)';
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
         
-            // Line
-            canvasCtx.lineWidth = 2;
-            canvasCtx.strokeStyle = 'rgb(255, 255, 255)';
-            canvasCtx.beginPath();
-        
-            const sliceWidth = WIDTH * 1.0 / timeDomain.length; // timeDomain.length * 2?
-            let x = 0;
-        
-            for(var i = 0; i < timeDomain.length; i++) {
-        
-                const v = timeDomain[i] / 128.0;
-                const y = v * HEIGHT / 2;
-        
-                if(i === 0) {
-                canvasCtx.moveTo(x, y);
+            // Draw Lines
+            let sliceWidth = WIDTH * 1.0 / mainTimeDomain.length; // timeDomain.length * 2?
+            let mainX = 0;
+            let secondaryX = 0;
+            const mainPath = new Path2D();
+            const secondaryPath = new Path2D();
+
+            for(let i = 0; i < mainTimeDomain.length; i++) {
+
+                const mainV = mainTimeDomain[i] / 128;
+                const mainY = mainV * (HEIGHT / 2);
+                const secondaryV = secondaryTimeDomain[i] / 128;
+                const secondaryY = secondaryV * (HEIGHT / 2);
+
+                if (i === 0) {
+                    mainPath.moveTo(mainX, mainY);
+                    secondaryPath.moveTo(secondaryX, secondaryY);
                 } else {
-                canvasCtx.lineTo(x, y);
+                    mainPath.lineTo(mainX, mainY);
+                    secondaryPath.lineTo(secondaryX, secondaryY);
                 }
-        
-                x += sliceWidth;
+
+                mainX += sliceWidth;
+                secondaryX += sliceWidth;
             }
-        
-            canvasCtx.lineTo(WIDTH, HEIGHT / 2);
-            canvasCtx.stroke();
+
+            mainPath.lineTo(WIDTH, HEIGHT / 2);
+            secondaryPath.lineTo(WIDTH, HEIGHT / 2);
+
+            canvasCtx.lineWidth = 2;
+            canvasCtx.strokeStyle = 'rgb(255, 255, 0)';
+            canvasCtx.stroke(mainPath);
+            canvasCtx.strokeStyle = 'rgb(255, 255, 255)';
+            canvasCtx.stroke(secondaryPath);
         }
     }
 

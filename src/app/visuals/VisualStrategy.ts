@@ -1,3 +1,5 @@
+import AudioData from "../models/AudioData";
+
 export interface VisualStrategy {
-    display(data: { timeDomain: Uint8Array, frequency: Uint8Array }, canvas: HTMLCanvasElement): void;
+    display(audioData: AudioData, canvas: HTMLCanvasElement): void;
 }

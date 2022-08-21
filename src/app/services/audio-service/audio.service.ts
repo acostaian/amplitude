@@ -1,84 +1,96 @@
 import { Injectable } from '@angular/core';
+import AudioData from 'src/app/models/AudioData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AudioService {
 
-  public _fftSize: number;
-  private _audioContext!: AudioContext;
-  private _analyser!: AnalyserNode;
-  private _streamSource!: MediaStreamAudioSourceNode;
-  private _contextInitialized: boolean = false;
+  public fftSize: number;
+  private audioContext!: AudioContext;
+  private streamSource!: MediaStreamAudioSourceNode;
+  private channelSplitter!: ChannelSplitterNode;
+  private mainAnalyser!: AnalyserNode;
+  private secondaryAnalyser!: AnalyserNode;
+  private contextInitialized: boolean = false;
+  public isStereo = true;
 
   constructor() {
-    // This should be the only instance of AudioContext
-    this._fftSize = 2048;
+    this.fftSize = 2048;
   }
   
-  public async init() {
-    this._audioContext = new window.AudioContext();
-    this._analyser = new AnalyserNode(this._audioContext);
-    this._analyser.fftSize = this._fftSize;
+  private async init() {
+    this.audioContext = new window.AudioContext();
+    await this.initNodes();
 
-    // Obtain media stream through the navigator
-    let stream = await navigator.mediaDevices.getUserMedia({
-      audio: true
+    this.streamSource.connect(this.channelSplitter);
+    this.channelSplitter.connect(this.mainAnalyser, 0);
+    this.channelSplitter.connect(this.secondaryAnalyser, 1);
+
+    this.contextInitialized = true;
+  }
+
+  private async initNodes() {
+    this.mainAnalyser = new AnalyserNode(this.audioContext);
+    this.mainAnalyser.fftSize = this.fftSize;
+    this.secondaryAnalyser = new AnalyserNode(this.audioContext);
+    this.secondaryAnalyser.fftSize = this.fftSize;
+    this.streamSource = await this.createNavigatorSource();
+    this.channelSplitter = this.audioContext.createChannelSplitter();
+  }
+
+  private async createNavigatorSource() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        autoGainControl: false,
+        channelCount: 2,
+        echoCancellation: false,
+        latency: 0,
+        noiseSuppression: false,
+        sampleRate: 48000,
+        sampleSize: 16
+      }
     });
 
-    this._streamSource = this._audioContext.createMediaStreamSource(stream);
-
-    // this._streamSource.connect(this._audioContext.destination);
-    this._streamSource.connect(this._analyser);
-
-    this._contextInitialized = true;
+    return this.audioContext.createMediaStreamSource(stream);
   }
 
-  public async getFrequencyData(): Promise<Uint8Array> {
-    if (this._audioContext && this._audioContext.state === 'running') {
-      const bufferLength = this._analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
+  public async getAudioData(): Promise<AudioData> {
+    if (this.audioContext && this.audioContext.state === 'running') {
+      const bufferLength = this.mainAnalyser.frequencyBinCount;
+      const audioData = new AudioData(bufferLength, this.isStereo);
   
-      this._analyser.getByteFrequencyData(dataArray);
+      this.mainAnalyser.getByteFrequencyData(audioData.mainFrequencyData);
+      this.secondaryAnalyser.getByteFrequencyData(audioData.secondaryFrequencyData);
+      this.mainAnalyser.getByteTimeDomainData(audioData.mainTimeDomainData);
+      this.secondaryAnalyser.getByteTimeDomainData(audioData.secondaryTimeDomainData);
   
-      return dataArray;
+      return audioData;
     } else {
-      return new Uint8Array();
-    }
-  }
-
-  public async getTimeDomainData(): Promise<Uint8Array> {
-    if (this._audioContext && this._audioContext.state === 'running') {
-      const bufferLength = this._analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-  
-      this._analyser.getByteTimeDomainData(dataArray);
-  
-      return dataArray;
-    } else {
-      return new Uint8Array();
+      return new AudioData(0, false);
     }
   }
 
   play() {
-    if (!this._contextInitialized) {
+    if (!this.contextInitialized) {
       this.init();
     }
 
-    this._audioContext.resume();
+    this.audioContext.resume();
   }
 
   pause() {
-    this._audioContext.suspend();
+    this.audioContext.suspend();
   }
 
   public getFFT(): number {
-    return this._fftSize;
+    return this.fftSize;
   }
 
   public setFFT(value: number) {
-    this._fftSize = value;
-    this._analyser.fftSize = this._fftSize;
+    this.fftSize = value;
+    this.mainAnalyser.fftSize = this.fftSize;
+    this.secondaryAnalyser.fftSize = this.fftSize;
   }
   
 }
