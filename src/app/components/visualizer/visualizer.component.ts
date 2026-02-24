@@ -2,9 +2,10 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, HostListener }
 import { VisualizerService } from '../../services/visualizer-service/visualizer.service';
 
 @Component({
-  selector: 'app-visualizer',
-  templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.css']
+    selector: 'app-visualizer',
+    templateUrl: './visualizer.component.html',
+    styleUrls: ['./visualizer.component.css'],
+    standalone: false
 })
 export class VisualizerComponent implements OnInit, AfterViewInit {
 

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AudioService } from '../../services/audio-service/audio.service';
 
 @Component({
-  selector: 'app-mute-button',
-  templateUrl: './mute-button.component.html',
-  styleUrls: ['./mute-button.component.css']
+    selector: 'app-mute-button',
+    templateUrl: './mute-button.component.html',
+    styleUrls: ['./mute-button.component.css'],
+    standalone: false
 })
 export class MuteButtonComponent implements OnInit {
 

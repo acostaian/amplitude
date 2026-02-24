@@ -4,9 +4,10 @@ import { Strategy } from '../../visuals/Visualizers';
 import visuals from '../../visuals/visuals';
 
 @Component({
-  selector: 'app-visuals-selector',
-  templateUrl: './visuals-selector.component.html',
-  styleUrls: ['./visuals-selector.component.css']
+    selector: 'app-visuals-selector',
+    templateUrl: './visuals-selector.component.html',
+    styleUrls: ['./visuals-selector.component.css'],
+    standalone: false
 })
 export class VisualsSelectorComponent implements OnInit {
 

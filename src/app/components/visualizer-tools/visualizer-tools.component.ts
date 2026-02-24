@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-visualizer-tools',
-  templateUrl: './visualizer-tools.component.html',
-  styleUrls: ['./visualizer-tools.component.css']
+    selector: 'app-visualizer-tools',
+    templateUrl: './visualizer-tools.component.html',
+    styleUrls: ['./visualizer-tools.component.css'],
+    standalone: false
 })
 export class VisualizerToolsComponent implements OnInit {
 

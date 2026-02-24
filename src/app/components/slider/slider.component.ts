@@ -2,9 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AudioService } from '../../services/audio-service/audio.service';
 
 @Component({
-  selector: 'app-slider',
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.css']
+    selector: 'app-slider',
+    templateUrl: './slider.component.html',
+    styleUrls: ['./slider.component.css'],
+    standalone: false
 })
 export class SliderComponent implements OnInit {
 
